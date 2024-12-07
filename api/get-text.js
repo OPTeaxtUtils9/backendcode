@@ -1,10 +1,4 @@
-const express = require('express');
-const app = express();
-const port = 5000;
-const cors = require('cors');
-app.use(cors());
-
-// Array of different texts
+// Export as a serverless function
 let texts = [
     "Thank you for reaching out! We'll get back to you soon.",
     "We appreciate your email! A team member will reply shortly.",
@@ -75,23 +69,18 @@ let texts = [
     "Thanks for your message! A team member will reply soon.",
     "We’ve received your query! We’re working on a response for you."
 ];  
-
-// Random index to fetch text
-let randomTextIndex = 0;
-
-// API route to get next random text
-app.get('/get-text', (req, res) => {
-  const randomText = texts[randomTextIndex];
-  randomTextIndex++; // Move to next random text
   
-  // If all texts have been used, reset the index to 0 (start from the first text)
-  if (randomTextIndex >= texts.length) {
-    randomTextIndex = 0;
+  let randomTextIndex = 0;
+  
+  export default function handler(req, res) {
+    const randomText = texts[randomTextIndex];
+    randomTextIndex++;
+  
+    // Reset the index if all texts are used
+    if (randomTextIndex >= texts.length) {
+      randomTextIndex = 0;
+    }
+  
+    res.status(200).json({ text: randomText });
   }
-
-  res.json({ text: randomText });
-});
-
-app.listen(port, () => {
-  console.log(`Server running on http://localhost:${port}`);
-});
+  
